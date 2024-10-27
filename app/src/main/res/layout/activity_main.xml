@@ -6,7 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    android:background="#CCCCCA"
+    >
 
     <ImageView
         android:layout_width="match_parent"
@@ -44,6 +46,7 @@
         android:layout_height="280dp"
         android:id="@+id/resultText"
         android:text=""
+        android:layout_margin="20dp"
         android:padding="8dp"
         android:background="@drawable/border"
         android:textColor="@color/black"

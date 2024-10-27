@@ -36,9 +36,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
 
-    private lateinit var cameraImage:ImageView
-
-
     private  var currentPhotoPath:String? = null
     private lateinit var requestPermissionLauncher : ActivityResultLauncher<String>
     private lateinit var takePictureLauncher:ActivityResultLauncher<Uri>
@@ -55,7 +52,6 @@ class MainActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
-
         }
 
         //take permission for camera
@@ -68,17 +64,14 @@ class MainActivity : AppCompatActivity() {
 
 
 
-
         //take picture from camera
         takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success: Boolean ->
             if (success) {
-
                 currentPhotoPath?.let { path->
                     val bitmap=BitmapFactory.decodeFile(path)
                     binding.cameraImage.setImageBitmap(bitmap)
                     recongnizeText(bitmap)
                 }
-
             } else {
                 Toast.makeText(this, "Image capture failed", Toast.LENGTH_SHORT).show()
             }
@@ -89,16 +82,11 @@ class MainActivity : AppCompatActivity() {
                 requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
          }
 
-
     }
 
-
-
-
-
     private fun createImageFile(): File {
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
 
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         return File.createTempFile(
             "JPEG_${timeStamp}_",
@@ -108,6 +96,7 @@ class MainActivity : AppCompatActivity() {
             currentPhotoPath = absolutePath
         }
     }
+
 
     private fun captureImage(){
         val photoFile:File?= try {
@@ -125,7 +114,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun recongnizeText(bitmap: Bitmap){
 
-    val image = InputImage.fromBitmap(bitmap, 0)
+       val image = InputImage.fromBitmap(bitmap, 0)
         val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
         recognizer.process(image).addOnSuccessListener { ocrTxt ->
@@ -136,6 +125,7 @@ class MainActivity : AppCompatActivity() {
             binding.copyTextBtn.setOnClickListener {
                 val clipboard = ContextCompat.getSystemService(this, ClipboardManager::class.java)
                 val clip = android.content.ClipData.newPlainText("Recognized Text", ocrTxt.text)
+                binding.copyTextBtn.visibility = Button.GONE
 
                 clipboard?.setPrimaryClip(clip)
                 Toast.makeText(this, "Text copied to clipboard", Toast.LENGTH_SHORT).show()
